@@ -30,7 +30,7 @@ class MetaData(models.Model):
 
     keywords = TaggableManager(help_text=_('Tags (or keywords) help users discover your dataset; please include terms that would be used by technical and non-technical users.'), blank=True)
 
-    modified = models.DateTimeField(_('Last Modified'), auto_now=False, auto_now_add=False, blank=True, help_text=_('Most recent date on which the dataset was changed, updated or modified.'))
+    modified = models.DateTimeField(_('Last Modified'), blank=True, auto_now=True, auto_now_add=False, help_text=_('Most recent date on which the dataset was changed, updated or modified.'))
 
     publisher = models.CharField('Publisher', blank=True, max_length=255, help_text=_('The publishing entity.'))
 
@@ -92,6 +92,8 @@ class DataConnection(models.Model):
     webservice = models.URLField('Web Service URL such as API', blank=True, help_text=_('The URL of the organization or information'))
 
     notes = models.TextField(_('Notes'), blank=True, help_text=_('Notes'))
+
+    technicalnotes = models.TextField(_('Techincal Notes'), blank=True, help_text=_('Technical Notes'))
 
     units = models.CharField('Units', blank=True, max_length=255, help_text=_('Units'))
 
