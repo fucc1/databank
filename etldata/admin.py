@@ -10,6 +10,12 @@ class DataConnectionAdmin(admin.ModelAdmin):
     list_display = ('indicator','sectorid','organization','status',)
     #fieldsets =[(None,{'fields': ['categoryName']}),]
 
+    def get_form(self, request, obj=None, **kwargs):
+        if not request.user.is_superuser:
+            self.exclude.append('preprocessors')
+            self.exclude.append('raw_response')
+        return super(DataConnectionAdmin, self).get_form(request, obj, **kwargs)
+
 
 
 class MetaDataAdmin(reversion.VersionAdmin):

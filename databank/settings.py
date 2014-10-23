@@ -37,9 +37,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'south',
     'taggit',
     'etldata',
     'processors',
+    'reversion',
 )
 
 
@@ -85,3 +87,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+MEDIA_URL = "/media/"
+
+ADMIN_MEDIA_PREFIX = ""
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

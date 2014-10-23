@@ -67,9 +67,10 @@ class Command(BaseCommand):
                 for (csvhead,modelvar) in csvmapping.items():
 
                     if csvhead == "Unstructured Metadata":
-                        tempmeta = MetaData(title=tempobj['Unstructured Metadata'])
-                        tempmeta.save()
-                        setattr(tempDataCon, 'metadata', tempmeta)
+                        if tempobj['Unstructured Metadata'] != "":
+                            tempmeta = MetaData(title=tempobj['Unstructured Metadata'])
+                            tempmeta.save()
+                            setattr(tempDataCon, 'metadata', tempmeta)
                         #tempDataCon.metadata = tempmeta
                         continue
                     print modelvar, csvhead

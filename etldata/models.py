@@ -56,6 +56,11 @@ class MetaData(models.Model):
 
     temporal = models.CharField('Temporal', blank=True, max_length=255, help_text=_('The range of temporal applicability of a dataset (i.e., a start and end date of applicability for the data).'))
 
+    def __str__(self):
+        # Note use of django.utils.encoding.force_bytes() here because
+        # first_name and last_name will be unicode strings.
+        return self.title
+
 
 
 
@@ -81,7 +86,7 @@ class DataConnection(models.Model):
 
     metadataURL = models.URLField('Metadata URL', blank=True, help_text=_('The URl where the metadata is found'))
 
-    update_freq = models.CharField(_('Update Frequency'), blank=True, max_length=255, help_text=_('Automatically pull in data from Formhub'))
+    update_freq = models.CharField(_('Update Frequency'), blank=True, max_length=255, help_text=_('Frequency in which data is updated.'))
 
 
 
@@ -107,7 +112,12 @@ class DataConnection(models.Model):
 
     preprocessors = models.ForeignKey(Processor, blank=True, null=True)
 
-    status = models.CharField('Status', blank=False, max_length=255, help_text=_('Status'), choices=STATUS)
+    status = models.CharField('Status', blank=False, max_length=255, help_text=_('Status'), choices=STATUS, default="Not Checked")
+
+    data_start = models.DateField(_('Data Start Date'), blank=True, auto_now=False, null=True, auto_now_add=False, help_text=_('The year the data started.  Day and month will not be used'))
+    data_end = models.DateField(_('Data End Date'), blank=True, auto_now=False, null=True, auto_now_add=False, help_text=_('The year the data ends.  Day and month will not be used'))
+
+
 
     #openrefine = models.ForeignKey(OpenRefine, blank=True, null=True)
 
