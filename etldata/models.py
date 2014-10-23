@@ -89,7 +89,7 @@ class DataConnection(models.Model):
     update_freq = models.CharField(_('Update Frequency'), blank=True, max_length=255, help_text=_('Frequency in which data is updated.'))
 
 
-    raw_response = models.TextField(_('Description'), blank=True, help_text='Raw response from data URL')
+    raw_response = models.TextField(_('Description'), blank=True, help_text='Notes of this dataset')
 
     orgURL = models.URLField('Information Page', blank=True, help_text=_('The URl where the data is found'))
 
@@ -104,7 +104,7 @@ class DataConnection(models.Model):
 
     metadata = models.ForeignKey(MetaData, blank=True, null=True)
 
-    source = models.CharField('Source', blank=True, max_length=255, help_text=_('Units'))
+    source = models.CharField('Source', blank=True, max_length=255, help_text=_('Source Org'))
 
     sector = models.CharField('Sector', blank=True, max_length=255, help_text=_('Sector'))
 

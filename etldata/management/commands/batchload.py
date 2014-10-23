@@ -77,12 +77,13 @@ class Command(BaseCommand):
                         setattr(tempDataCon, modelvar, tempdate.date().strftime("%Y-%m-%d"))
                         continue
                     if csvhead == "Unstructured Metadata":
-                        if tempobj['Unstructured Metadata'] != "":
-                            tempmeta = MetaData(title=tempobj['Unstructured Metadata'])
-                            tempmeta.save()
-                            setattr(tempDataCon, 'metadata', tempmeta)
-                        #tempDataCon.metadata = tempmeta
                         continue
+                        # if tempobj['Unstructured Metadata'] != "" and tempobj['Unstructured Metadata'] != None:
+                        #     tempmeta = MetaData(title=tempobj['Unstructured Metadata'])
+                        #     tempmeta.save()
+                        #     setattr(tempDataCon, 'metadata', tempmeta)
+                        # #tempDataCon.metadata = tempmeta
+                        # continue
                     print modelvar, csvhead
                     print unicode(tempobj[csvhead], "utf-8", errors="replace")
                     setattr(tempDataCon, modelvar, unicode(tempobj[csvhead], "utf-8", errors="replace"))
