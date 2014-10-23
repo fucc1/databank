@@ -17,7 +17,7 @@ class DataConnectionAdmin(reversion.VersionAdmin):
     #     return super(DataConnectionAdmin, self).get_form(request, obj, **kwargs)
 
     def get_readonly_fields(self, request, obj=None):
-        if request.user.is_superuser:
+        if request.user.groups.filter(name='superadmin').exists() or request.user.groups.filter(name='editor').exists():
             return self.readonly_fields
 
         if self.declared_fieldsets:
@@ -54,17 +54,17 @@ class MetaDataAdmin(reversion.VersionAdmin):
     #fieldsets =[(None,{'fields': ['theme']}),]
 
 
-    def has_add_permission(self, request, obj=None):
+    def get_readonly_fields(self, request, obj=None):
         if request.user.groups.filter(name='superadmin').exists() or request.user.groups.filter(name='editor').exists():
-            return True
-        else:
-            return False
+            return self.readonly_fields
 
-    def has_delete_permission(self, request, obj=None):
-        if request.user.groups.filter(name='superadmin').exists() or request.user.groups.filter(name='editor').exists():
-            return True
+        if self.declared_fieldsets:
+            return flatten_fieldsets(self.declared_fieldsets)
         else:
-            return False
+            return list(set(
+                [field.name for field in self.opts.local_fields] +
+                [field.name for field in self.opts.local_many_to_many]
+            ))
 
 
     # def __init__(self, *args, **kwargs):
