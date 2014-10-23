@@ -75,7 +75,7 @@ class DataConnection(models.Model):
 
     alphanumeric = RegexValidator(r'^[\w\-\s]*$', 'Only alphanumeric characters are allowed.')
 
-    indicator = models.CharField('Data Connection Name', max_length=300, help_text=_('Name of the indicator'), unique=True, validators=[alphanumeric])
+    indicator = models.CharField('Data Connection Name', max_length=300, help_text=_('Name of the indicator'), unique=True)
 
     sectorid = models.CharField('Sector Indicator', blank=True, max_length=10, help_text=_('SectorID'))
 
