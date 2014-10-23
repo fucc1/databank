@@ -93,3 +93,13 @@ MEDIA_URL = "/media/"
 ADMIN_MEDIA_PREFIX = ""
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Load more settings from a file called local_settings.py if it exists
+try:
+    from local_settings import *  # noqa
+except ImportError, e:
+    print "failed to load local_settings"
+    print e
+    pass
