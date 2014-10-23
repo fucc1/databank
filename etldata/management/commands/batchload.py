@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from etldata.models import DataConnection, MetaData
+from dateutil.parser import parse as dateparser
 
 from optparse import make_option
 
@@ -29,15 +30,18 @@ class Command(BaseCommand):
             "Sector ID":"sectorid",
             "Agency":"agency",
             "Indicator":"indicator",
+            "Source":"source",
             "Units":"units",
             "Notes":"notes",
-            "Web Site":"orgURL",
+            "Data URL":"webservice",
             "Organization":"organization",
-            "File":"webservice",
+            "Web Site":"orgURL",
             #"Downloaded":"",
             "edip-notes":"technicalnotes",
             #create new model for this
-            "Unstructured Metadata":"",
+            #"Unstructured Metadata":"",
+            "Datestart": "data_start",
+            "Dateend": "data_end"
 
         }
 
@@ -66,6 +70,12 @@ class Command(BaseCommand):
 
                 for (csvhead,modelvar) in csvmapping.items():
 
+                    #never hit this because notw hat I expceted
+                    if csvhead in ("Datestart", "Dateend",):
+                        tempdate = dateparser(tempobj[csvhead])
+                        print tempdate
+                        setattr(tempDataCon, modelvar, tempdate.date().strftime("%Y-%m-%d"))
+                        continue
                     if csvhead == "Unstructured Metadata":
                         if tempobj['Unstructured Metadata'] != "":
                             tempmeta = MetaData(title=tempobj['Unstructured Metadata'])
@@ -74,7 +84,8 @@ class Command(BaseCommand):
                         #tempDataCon.metadata = tempmeta
                         continue
                     print modelvar, csvhead
-                    setattr(tempDataCon, modelvar, tempobj[csvhead])
+                    print unicode(tempobj[csvhead], "utf-8", errors="replace")
+                    setattr(tempDataCon, modelvar, unicode(tempobj[csvhead], "utf-8", errors="replace"))
 
 
 

@@ -89,10 +89,10 @@ class DataConnection(models.Model):
     update_freq = models.CharField(_('Update Frequency'), blank=True, max_length=255, help_text=_('Frequency in which data is updated.'))
 
 
-
     raw_response = models.TextField(_('Description'), blank=True, help_text='Raw response from data URL')
 
     orgURL = models.URLField('Information Page', blank=True, help_text=_('The URl where the data is found'))
+
 
     webservice = models.URLField('Web Service URL such as API', blank=True, help_text=_('The URL of the organization or information'))
 
