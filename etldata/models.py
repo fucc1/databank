@@ -89,7 +89,7 @@ class DataConnection(models.Model):
     update_freq = models.CharField(_('Update Frequency'), blank=True, max_length=255, help_text=_('Frequency in which data is updated.'))
 
 
-    raw_response = models.TextField(_('Description'), blank=True, help_text='Notes of this dataset')
+    raw_response = models.TextField(_('Raw Response'), blank=True, help_text='Do not edit this will be the raw response')
 
     orgURL = models.URLField('Information Page', blank=True, help_text=_('The URl where the data is found'))
 

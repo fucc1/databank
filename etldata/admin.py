@@ -8,6 +8,7 @@ from etldata.models import DataConnection, MetaData
 
 class DataConnectionAdmin(reversion.VersionAdmin):
     list_display = ('indicator','sectorid','organization','status',)
+    exclude = ('raw_response','preprocessors',)
     #fieldsets =[(None,{'fields': ['categoryName']}),]
 
     # def get_form(self, request, obj=None, **kwargs):
