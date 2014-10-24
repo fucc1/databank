@@ -7,7 +7,7 @@ from etldata.models import DataConnection, MetaData
 
 
 class DataConnectionAdmin(reversion.VersionAdmin):
-    list_display = ('indicator','sectorid','organization','status',)
+    list_display = ('indicator','sectorid','sector','organization','status',)
     exclude = ('raw_response','preprocessors',)
     #fieldsets =[(None,{'fields': ['categoryName']}),]
 
@@ -18,7 +18,7 @@ class DataConnectionAdmin(reversion.VersionAdmin):
     #     return super(DataConnectionAdmin, self).get_form(request, obj, **kwargs)
 
     def get_readonly_fields(self, request, obj=None):
-        if request.user.groups.filter(name='superadmin').exists() or request.user.groups.filter(name='editor').exists():
+        if request.user.groups.filter(name='superadmin').exists() or request.user.groups.filter(name='editor').exists() or request.user.is_superuser:
             return self.readonly_fields
 
         if self.declared_fieldsets:
