@@ -16,8 +16,8 @@ def detail(request,id):
 	s+="<tr><td>Indicator</td><td>Country</td><td>Value</td><td>Date</td></tr>"
 	for r in data[1]:
 		if(r['value']==None):
-			r['value']="#"
-			s+="<tr><td>" + r['indicator']['value'] + "</td><td>" + r['country']['value'] + "</td><td>" + r['value'] + "</td><td>" + r['date'] + "</td></tr>"
+			r['value']="None"
+		s+="<tr><td>" + r['indicator']['value'] + "</td><td>" + r['country']['value'] + "</td><td>" + r['value'] + "</td><td>" + r['date'] + "</td></tr>"
 	s+="</table>"
 	
 	return HttpResponse(s)
