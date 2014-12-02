@@ -1,12 +1,9 @@
-from django.shortcuts import render
-
-from django.shortcuts import render
+from urlparse import urlparse
 from etldata.models import DataConnection
 from django.views import generic
 from django.http import HttpResponse
 from StringIO import StringIO
-import urllib2, json, csv
-import codecs
+import csv
 
 def export(request):
 	
@@ -30,25 +27,40 @@ def export(request):
 	
 	strSectors = []
 	sectors = DataConnection.objects.values('sector')
+	apis = DataConnection.objects.values('webservice')
 	
 	fileHandle = StringIO()
 	a = csv.writer(fileHandle)
-	data = [['Number of Indicators',length],['Not Checked',lengthNotChecked],['Viewed',lengthViewed],['Begin Date',oldest],['End Date',newest]]
+	data = [['Databank Report',''],['',''],['Number of Indicators',length],['Not Checked',lengthNotChecked],['Viewed',lengthViewed],['Data Begin Date',oldest],['Data End Date',newest],['',''],['Sectors','']]
 	
-	for sector in sectors:
-		filtered = dataConnections.filter(status=sector)
+	for sectorName in sectors:
+		strSector = sectorName.get('sector')
+		filtered = dataConnections.filter(sector=strSector)
 		lenFiltered = len(filtered)
-		strSector = sector.get('sector')
-		strSectorDecoded=codecs.decode(strSector,'utf-8')
-		strSectors = [strSectorDecoded , lenFiltered]
-		data.append(strSectors)
+		sectorArray = [strSector , lenFiltered]
+		data.append(sectorArray)
 	
+	apiHeader=['','']
+	data.append(apiHeader)
+	apiHeader=['APIs','']
+	data.append(apiHeader)
+	
+	for api in apis:
+		strApi = api.get('webservice')
+		if(len(strApi)>0):
+			urlObj = urlparse(strApi)
+			netLoc=urlObj.netloc
+			filtered = dataConnections.filter(webservice__icontains=netLoc)
+			lenFiltered=len(filtered)
+			apiArray = [netLoc, lenFiltered]
+			data.append(apiArray)
+			
 	a.writerows(data)
-	
+		
 	filestring = fileHandle.getvalue()
 	fileHandle.close()
 	
 	resp = HttpResponse(filestring, mimetype='application/x-download')
-	resp['Content-Disposition'] = 'attachment;filename=tableoutput.csv'
+	resp['Content-Disposition'] = 'attachment;filename=databank_report.csv'
 	return resp
 	
