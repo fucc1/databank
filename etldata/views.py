@@ -2,8 +2,50 @@ from urlparse import urlparse
 from etldata.models import DataConnection
 from django.views import generic
 from django.http import HttpResponse
+from django.template import loader, RequestContext
 from StringIO import StringIO
+from django.forms.models import model_to_dict
 import csv
+
+
+def download(request):
+	dataConnections = DataConnection.objects.all()
+	template = loader.get_template('download.html')
+	context = RequestContext(request, {'dc': dataConnections,})
+	return HttpResponse(template.render(context))
+
+def full_export(request):
+	dataConnections = DataConnection.objects.all()
+	first = dataConnections[0]
+	data=[]
+	row=[]
+
+	headers = fields=model_to_dict(first)
+	
+	for field,val in fields.items():
+		row.append(field)
+	data.append(row)
+	row=[]
+	
+	for dc in dataConnections:
+		fields=model_to_dict(dc)
+		for field,val in fields.items():
+			row.append(val)
+		data.append(row)
+		row=[]
+		
+	fileHandle = StringIO()
+	a = csv.writer(fileHandle)
+	
+	a.writerows(data)
+		
+	filestring = fileHandle.getvalue()
+	fileHandle.close()
+	
+	resp = HttpResponse(filestring, mimetype='application/x-download')
+	resp['Content-Disposition'] = 'attachment;filename=full_report.csv'
+	
+	return resp
 
 def export(request):
 	
