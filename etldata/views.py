@@ -5,15 +5,17 @@ from django.http import HttpResponse
 from django.template import loader, RequestContext
 from StringIO import StringIO
 from django.forms.models import model_to_dict
+from django.contrib.auth.decorators import login_required
 import csv
 
-
+@login_required
 def download(request):
 	dataConnections = DataConnection.objects.all()
 	template = loader.get_template('download.html')
 	context = RequestContext(request, {'dc': dataConnections,})
 	return HttpResponse(template.render(context))
 
+@login_required
 def full_export(request):
 	dataConnections = DataConnection.objects.all()
 	first = dataConnections[0]
@@ -47,6 +49,7 @@ def full_export(request):
 	
 	return resp
 
+@login_required
 def export(request):
 	
 	dataConnections = DataConnection.objects.all()
