@@ -65,8 +65,11 @@ def export(request):
 	completed = dataConnections.filter(status='Completed')
 	lengthCompleted = len(completed)
 	
-	sortedStart = dataConnections.order_by('data_start')
-	sortedEnd = dataConnections.order_by('-data_end')
+	notNullStart = dataConnections.filter(data_start__isnull=False)
+	notNullEnd = dataConnections.filter(data_end__isnull=False)
+	
+	sortedStart = notNullStart.order_by('data_start')
+	sortedEnd = notNullEnd.order_by('-data_end')
 	
 	oldest = sortedStart[0].data_start
 	newest = sortedEnd[0].data_end
