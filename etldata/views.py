@@ -71,8 +71,10 @@ def export(request):
 	newest = sortedEnd[0].data_end
 	
 	strSectors = []
-	sectors = DataConnection.objects.values('sector')
-	apis = DataConnection.objects.values('webservice')
+	sectors = DataConnection.objects.distinct('sector').values('sector')
+	apis = DataConnection.objects.distinct('webservice').values('webservice')
+	print sectors
+	print apis
 	
 	fileHandle = StringIO()
 	a = csv.writer(fileHandle)
@@ -83,7 +85,7 @@ def export(request):
 		filtered = dataConnections.filter(sector=strSector)
 		lenFiltered = len(filtered)
 		sectorArray = [strSector , lenFiltered]
-		if(sectorArray in data):
+		if(sectorArray not in data):
 			data.append(sectorArray)
 	
 	apiHeader=['','']
@@ -99,7 +101,8 @@ def export(request):
 			filtered = dataConnections.filter(webservice__icontains=netLoc)
 			lenFiltered=len(filtered)
 			apiArray = [netLoc, lenFiltered]
-			data.append(apiArray)
+			if apiArray not in data:
+				data.append(apiArray)
 			
 	a.writerows(data)
 		
