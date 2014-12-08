@@ -7,6 +7,7 @@ from StringIO import StringIO
 from django.forms.models import model_to_dict
 from django.contrib.auth.decorators import login_required
 import csv
+import codecs
 
 @login_required
 def download(request):
@@ -71,8 +72,8 @@ def export(request):
 	newest = sortedEnd[0].data_end
 	
 	strSectors = []
-	sectors = DataConnection.objects.distinct('sector').values('sector')
-	apis = DataConnection.objects.distinct('webservice').values('webservice')
+	sectors = DataConnection.objects.values_list('sector', flat=True).distinct()
+	apis = DataConnection.objects.values_list('webservice', flat=True).distinct()
 	print sectors
 	print apis
 	
@@ -81,10 +82,10 @@ def export(request):
 	data = [['Databank Report',''],['',''],['Number of Indicators',length],['Not Checked',lengthNotChecked],['Viewed',lengthViewed],['Data Begin Date',oldest],['Data End Date',newest],['',''],['Sectors','']]
 	
 	for sectorName in sectors:
-		strSector = sectorName.get('sector')
-		filtered = dataConnections.filter(sector=strSector)
+		sectorName=sectorName.decode()
+		filtered = dataConnections.filter(sector=sectorName)
 		lenFiltered = len(filtered)
-		sectorArray = [strSector , lenFiltered]
+		sectorArray = [sectorName , lenFiltered]
 		if(sectorArray not in data):
 			data.append(sectorArray)
 	
@@ -94,9 +95,8 @@ def export(request):
 	data.append(apiHeader)
 	
 	for api in apis:
-		strApi = api.get('webservice')
-		if(len(strApi)>0):
-			urlObj = urlparse(strApi)
+		if(len(api)>0):
+			urlObj = urlparse(api)
 			netLoc=urlObj.netloc
 			filtered = dataConnections.filter(webservice__icontains=netLoc)
 			lenFiltered=len(filtered)
