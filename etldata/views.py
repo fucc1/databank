@@ -83,7 +83,8 @@ def export(request):
 		filtered = dataConnections.filter(sector=strSector)
 		lenFiltered = len(filtered)
 		sectorArray = [strSector , lenFiltered]
-		data.append(sectorArray)
+		if(sectorArray in data):
+			data.append(sectorArray)
 	
 	apiHeader=['','']
 	data.append(apiHeader)
