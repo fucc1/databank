@@ -88,9 +88,11 @@ def export(request):
 		sectorName=sectorName.decode()
 		filtered = dataConnections.filter(sector=sectorName)
 		lenFiltered = len(filtered)
+		sectorName = updateHealth(sectorName)
 		sectorArray = [sectorName , lenFiltered]
 		if(sectorArray not in data):
 			data.append(sectorArray)
+	
 	
 	apiHeader=['','']
 	data.append(apiHeader)
@@ -116,3 +118,18 @@ def export(request):
 	resp['Content-Disposition'] = 'attachment;filename=databank_report.csv'
 	return resp
 	
+def updateHealth(sector):
+	if(sector=='HIV/AIDS'):
+		sector='Health - HIV/AIDS'
+	if(sector=='MALARIA'):
+		sector='Health - MALARIA'
+	if(sector=='MCH'):
+		sector='Health - MCH'
+	if(sector=='OHS'):
+		sector='Health - OHS'
+	if(sector=='PRH'):
+		sector='Health - PRH'
+	if(sector=='TB'):
+		sector='Health - TB'
+		
+	return sector
